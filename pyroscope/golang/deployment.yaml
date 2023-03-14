@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: golang
+  name: golang
+  namespace: profile
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: golang
+  template:
+    metadata:
+      labels:
+        app: golang
+    spec:
+      containers:
+        - env:
+            - name: PYROSCOPE_APPLICATION_NAME
+              value: golang_rust_app
+            - name: PYROSCOPE_SERVER_ADDRESS
+              value: "http://logtail-kubernetes-metrics.sls-monitoring:4040"
+          image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-golang'
+          imagePullPolicy: Always
+          name: golang
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+        - env:
+          image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-go-generator'
+          imagePullPolicy: Always
+          name: generator
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---

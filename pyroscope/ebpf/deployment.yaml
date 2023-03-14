@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ebpf
+  name: ebpf
+  namespace: profile
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ebpf
+  template:
+    metadata:
+      labels:
+        app: ebpf
+    spec:
+      containers:
+        - image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-pyroscope-ebpf'
+          args:
+            - ebpf
+            - --application-name
+            - k8s.ebpf
+            - --pid
+            - "1"
+            - --server-address
+            - http://logtail-kubernetes-metrics.sls-monitoring:4040
+
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            runAsGroup: 0
+            runAsUser: 0
+          name: ebpf
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 5120Mi
+          volumeMounts:
+            - mountPath: /lib/modules
+              name: lib
+            - mountPath: /sys
+              name: sys
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      hostPID: true
+      volumes:
+        - hostPath:
+            path: /lib/modules
+          name: lib
+        - hostPath:
+            path: /sys
+            type: Directory
+          name: sys
+      terminationGracePeriodSeconds: 30
+---
