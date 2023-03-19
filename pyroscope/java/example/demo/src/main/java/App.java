@@ -22,46 +22,18 @@ public class App {
             new PyroscopeAgent.Options.Builder(
                 new Config.Builder()
                     .setApplicationName("java.demo.app")
-                    //.setProfilingEvent(EventType.CPU)
-                    //.setProfilingEvent(EventType.ALLOC)
-                    .setProfilingAlloc("0")
-                    .setProfilingLock("0")
+                    .setProfilingEvent(EventType.WALL)
+                    .setProfilingAlloc("2m")
+                    .setProfilingLock("10ms")
                     .setServerAddress("http://logtail-kubernetes-metrics.sls-monitoring:4040")
                     .setFormat(Format.JFR)
                     .setLogLevel(Logger.Level.DEBUG)
-                    .setLabels(mapOf("user", "tolyan"))
+                    .setLabels(mapOf("user", "test"))
                     .build())
-//                .setExporter(new MyStdoutExporter())
                 .build()
         );
         Pyroscope.setStaticLabels(mapOf("region", "us-east-1"));
-
         appLogic();
-        mock();
-    }
-
-    private static void mock() {
-        for (int i = 0; i < 10; i++) {
-            Thread thread = new Thread(() -> {
-                System.out.println(Thread.currentThread().getName());
-                try {
-                    Thread.sleep(30 * 60 * 1000);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            });
-            thread.setName("thread-" + i);
-            thread.start();
-        }
-
-        Thread highCpuThread = new Thread(() -> {
-            int i = 0;
-            while (true) {
-                i++;
-            }
-        });
-        highCpuThread.setName("HighCpu");
-        highCpuThread.start();
     }
 
     private static void appLogic() {
