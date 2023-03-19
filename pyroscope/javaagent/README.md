@@ -1,6 +1,6 @@
 # Golang Example
 
-[更多详细参数请阅读官方文档](https://pyroscope.io/docs/golang/)
+[更多详细参数请阅读官方文档](https://pyroscope.io/docs/java/)
 
 ## 安装
 
