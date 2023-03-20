@@ -22,46 +22,22 @@ public class App {
             new PyroscopeAgent.Options.Builder(
                 new Config.Builder()
                     .setApplicationName("java.demo.app")
-                    //.setProfilingEvent(EventType.CPU)
-                    //.setProfilingEvent(EventType.ALLOC)
+                    // profiling events: itimer, cpu, wall. The default is itimer. (difference between itimer mode and cpu mode: https://github.com/async-profiler/async-profiler/issues/272)
+                    .setProfilingEvent(EventType.WALL)
+                    // sets the allocation threshold to register the events, in bytes (equivalent to --alloc= in async-profiler). The default value is "" - empty string, which means that allocation profiling is disabled. Setting it to 0 will register all the events.
                     .setProfilingAlloc("0")
+                    // sets the lock threshold to register the events, in nanoseconds (equivalent to --lock= in async-profiler). The default value is "" - empty string, which means that lock profiling is disabled. Setting it to 0 will register all the events.
                     .setProfilingLock("0")
                     .setServerAddress("http://logtail-kubernetes-metrics.sls-monitoring:4040")
+                    // sets the profiler output format. The default is collapsed, but in order to support multiple formats it must be set to jfr.
                     .setFormat(Format.JFR)
                     .setLogLevel(Logger.Level.DEBUG)
-                    .setLabels(mapOf("user", "tolyan"))
+                    // sets static labels
+                    .setLabels(mapOf("host", "java-host", "environment", "test", "version", "0.0.0"))
                     .build())
-//                .setExporter(new MyStdoutExporter())
                 .build()
         );
-        Pyroscope.setStaticLabels(mapOf("region", "us-east-1"));
-
         appLogic();
-        mock();
-    }
-
-    private static void mock() {
-        for (int i = 0; i < 10; i++) {
-            Thread thread = new Thread(() -> {
-                System.out.println(Thread.currentThread().getName());
-                try {
-                    Thread.sleep(30 * 60 * 1000);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            });
-            thread.setName("thread-" + i);
-            thread.start();
-        }
-
-        Thread highCpuThread = new Thread(() -> {
-            int i = 0;
-            while (true) {
-                i++;
-            }
-        });
-        highCpuThread.setName("HighCpu");
-        highCpuThread.start();
     }
 
     private static void appLogic() {

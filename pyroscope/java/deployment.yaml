@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: java
-  name: java-jfr
+  name: java
   namespace: profile
 spec:
   progressDeadlineSeconds: 600
@@ -18,9 +18,10 @@ spec:
         app: java
     spec:
       containers:
-        - image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-java'
+        - env:
+          image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-java'
           imagePullPolicy: Always
-          name: golang
+          name: javaagent
           resources:
             requests:
               cpu: 250m
