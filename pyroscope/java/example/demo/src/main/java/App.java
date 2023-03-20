@@ -22,7 +22,7 @@ public class App {
             new PyroscopeAgent.Options.Builder(
                 new Config.Builder()
                     .setApplicationName("java.demo.app")
-                    // profiling events: itimer, cpu, wall. The default is itimer.
+                    // profiling events: itimer, cpu, wall. The default is itimer. (difference between itimer mode and cpu mode: https://github.com/async-profiler/async-profiler/issues/272)
                     .setProfilingEvent(EventType.WALL)
                     // sets the allocation threshold to register the events, in bytes (equivalent to --alloc= in async-profiler). The default value is "" - empty string, which means that allocation profiling is disabled. Setting it to 0 will register all the events.
                     .setProfilingAlloc("0")
