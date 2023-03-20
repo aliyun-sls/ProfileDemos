@@ -22,17 +22,21 @@ public class App {
             new PyroscopeAgent.Options.Builder(
                 new Config.Builder()
                     .setApplicationName("java.demo.app")
+                    // profiling events: itimer, cpu, wall. The default is itimer.
                     .setProfilingEvent(EventType.WALL)
-                    .setProfilingAlloc("2m")
-                    .setProfilingLock("10ms")
+                    // sets the allocation threshold to register the events, in bytes (equivalent to --alloc= in async-profiler). The default value is "" - empty string, which means that allocation profiling is disabled. Setting it to 0 will register all the events.
+                    .setProfilingAlloc("0")
+                    // sets the lock threshold to register the events, in nanoseconds (equivalent to --lock= in async-profiler). The default value is "" - empty string, which means that lock profiling is disabled. Setting it to 0 will register all the events.
+                    .setProfilingLock("0")
                     .setServerAddress("http://logtail-kubernetes-metrics.sls-monitoring:4040")
+                    // sets the profiler output format. The default is collapsed, but in order to support multiple formats it must be set to jfr.
                     .setFormat(Format.JFR)
                     .setLogLevel(Logger.Level.DEBUG)
-                    .setLabels(mapOf("user", "test"))
+                    // sets static labels
+                    .setLabels(mapOf("host", "java-host", "environment", "test", "version", "0.0.0"))
                     .build())
                 .build()
         );
-        Pyroscope.setStaticLabels(mapOf("region", "us-east-1"));
         appLogic();
     }
 

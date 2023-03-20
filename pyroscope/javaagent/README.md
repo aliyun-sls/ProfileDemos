@@ -1,4 +1,4 @@
-# Golang Example
+# Javaagent Example
 
 [更多详细参数请阅读官方文档](https://pyroscope.io/docs/java/)
 
@@ -26,7 +26,21 @@ go get github.com/pyroscope-io/client/pyroscope
 本Demo 提供Kubernetes 部署
 
 1. demo.jar基于java构建，负责模拟java业务进程。
-2. pyrooscope.jar:java agent
+2. pyrooscope.jar:java agent，启动参数样例如下
+
+```
+export PYROSCOPE_APPLICATION_NAME=my.java.app
+export PYROSCOPE_SERVER_ADDRESS=http://logtail-kubernetes-metrics.sls-monitoring:4040
+export PYROSCOPE_LABELS='hostname=javaagent-hostname,version=0.0.0,environment=test'
+export PYROSCOPE_FORMAT=jfr
+
+
+# Optionally, if authentication is enabled, specify the API key.
+# export PYROSCOPE_AUTH_TOKEN={YOUR_API_KEY}
+
+java -javaagent:pyroscope.jar -jar app.jar
+
+```
 
 ### 打包
 

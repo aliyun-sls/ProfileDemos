@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: javaagent
-  name: javaagent
+    app: java
+  name: java
   namespace: profile
 spec:
   progressDeadlineSeconds: 600
@@ -11,19 +11,15 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: javaagent
+      app: java
   template:
     metadata:
       labels:
-        app: javaagent
+        app: java
     spec:
       containers:
         - env:
-            - name: PYROSCOPE_APPLICATION_NAME
-              value: javaagent-demo
-            - name: PYROSCOPE_SERVER_ADDRESS
-              value: "http://logtail-kubernetes-metrics.sls-monitoring:4040"
-          image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-javaagent'
+          image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-java'
           imagePullPolicy: Always
           name: javaagent
           resources:

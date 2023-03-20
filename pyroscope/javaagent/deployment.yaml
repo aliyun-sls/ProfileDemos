@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: java
+    app: javaagent
   name: javaagent
   namespace: profile
 spec:
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: java
+        app: javaagent
     spec:
       containers:
         - env:
@@ -28,9 +28,11 @@ spec:
             - name: PYROSCOPE_PROFILER_EVENT
               value: wall
             - name: PYROSCOPE_PROFILER_ALLOC
-              value: 2m
+              value: '0'
             - name: PYROSCOPE_PROFILER_LOCK
-              value: 10ms
+              value: '0'
+            - name: PYROSCOPE_LABELS
+              value: 'hostname=javaagent-hostname,version=0.0.0,environment=test'
           image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-javaagent'
           imagePullPolicy: Always
           name: javaagent
