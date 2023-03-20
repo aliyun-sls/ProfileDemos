@@ -5,7 +5,7 @@
 ## 安装
 
 ```
-go get github.com/pyroscope-io/client/pyroscope
+pyroscope.jar发布地址： https://github.com/pyroscope-io/pyroscope-java/releases
 ```
 
 ## 接入SLS 必备参数

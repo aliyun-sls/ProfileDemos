@@ -5,7 +5,8 @@
 ## 安装
 
 ```
-go get github.com/pyroscope-io/client/pyroscope
+gradle添加依赖：
+implementation("io.pyroscope:agent:${pyroscope_version}")
 ```
 
 ## 接入SLS 必备参数
