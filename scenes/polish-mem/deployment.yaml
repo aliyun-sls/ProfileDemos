@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: go-polish-mem
+  name: go-polish-mem
+  namespace: profile
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: go-polish-mem
+  template:
+    metadata:
+      labels:
+        app: go-polish-mem
+    spec:
+      containers:
+        - env:
+            - name: PYROSCOPE_APPLICATION_NAME
+              value: go_profile
+            - name: PYROSCOPE_SERVER_ADDRESS
+              value: "http://logtail-kubernetes-metrics.sls-monitoring:4040"
+          image: 'registry-vpc.cn-beijing.aliyuncs.com/log-service/logtail:profile-golang-polish-mem'
+          imagePullPolicy: Always
+          name: golang
+          resources:
+            requests:
+              cpu: 250m
+              memory: 50Mi
+            limits:
+              cpu: 250m
+              memory: 50Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
